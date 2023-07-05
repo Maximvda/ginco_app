@@ -1,0 +1,31 @@
+#Dist folder of pyinstaller
+dist/
+__pycache__/
+ *.pyc
+ __pycache__
+
+# Compiled Python bytecode
+*.py[cod]
+# Log files
+*.log
+*.data
+.token*
+
+# Applications
+*.app
+*.exe
+*.war
+temp
+test*.py
+temp.py
+profile_results
+token.json
+*.json
+env
+*venv
+venv/
+build/
+.idea/
+.buildozer/
+bin/
+*.ico
