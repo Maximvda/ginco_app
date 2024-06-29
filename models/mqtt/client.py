@@ -163,6 +163,10 @@ class MqttClient(mqtt.Client):
         (_base, topic) = message.topic.split("/")[-2:]
         payload = message.payload
         self._logger.info("received topic %s, with payload %s", topic, payload)
+        message = protobuf.InfoMessage()
+        message.ParseFromString(payload)
+        print(message)
+        print(message.version)
 
     def _send_command(self, command, topic="ginco_bridge/command"):
         self.publish(topic, command.SerializeToString(), qos=0, retain=False)

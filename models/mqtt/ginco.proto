@@ -4,16 +4,99 @@ package ginco;
 
 
 message Upgrade {
-	uint32 device_id = 1;
-	uint32 image_size = 2;
+    uint32 device_id = 1;
+    uint32 image_size = 2;
+}
+
+message ConfigureSensor {
+    uint32 input_id = 1;
+    bool is_button = 2;
+    bool active_high = 3;
+    bool initial_state = 4;
+}
+
+message ConfigureActuator {
+    uint32 output_id = 1;
+    uint32 value = 2;
+    bool is_pwm = 3;
+    uint32 initial_value = 4;
+}
+
+message Action {
+    uint32 device_id = 1;
+    uint32 actuator_id = 2;
+    uint32 value = 3;
+}
+
+message ConfigureScene {
+    repeated Action actions = 1;
+}
+
+enum InfoRequest {
+    VERSION = 0;
+    DEVICE_LIST = 1;
 }
 
 message Command {
-	oneof command {
-		Upgrade upgrade = 1;
-	}
+    oneof command {
+        Upgrade upgrade = 1;
+        ConfigureSensor configure_sensor = 2;
+        ConfigureActuator configure_actuator = 3;
+        ConfigureScene configure_scene = 4;
+        Action action = 5;
+        uint32 execute_scene = 6;
+        InfoRequest info_request = 7;
+    }
 }
 
-message Commands {
-	repeated Command commands = 1;
+message Device {
+    uint32 id = 1;
+    uint32 version_major = 2;
+    uint32 version_minor = 3;
+}
+
+message DeviceList {
+    repeated Device devices = 1;
+}
+
+message Sensor {
+    uint32 device_id = 1;
+    uint32 sensor_id = 2;
+    bool is_button = 3;
+}
+
+message SensorList {
+    repeated Sensor sensors = 1;
+}
+
+message Actuator {
+    uint32 device_id = 1;
+    uint32 actuator_id = 2;
+    uint32 is_pwm = 3;
+}
+
+message ActuatorList {
+    repeated Actuator actuators = 1;
+}
+
+message Event {
+    uint32 device_id = 1;
+    uint32 sensor_id = 2;
+    float value = 3;
+}
+
+message InfoMessage {
+    oneof data {
+        DeviceList device_list = 1;
+        SensorList sensor_list = 2;
+        ActuatorList actuator_list = 3;
+        Event event = 4;
+        Version version = 5;
+    }
+}
+
+message Version {
+    uint32 major = 1;
+    uint32 minor = 2;
+    uint32 patch = 3;
 }
