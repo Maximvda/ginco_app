@@ -6,7 +6,8 @@ import time
 from models.ginco_socket import GincoSocket, Commands
 from models.mqtt.client import MqttClient
 from utils.logging import enable_console_log
-from models.mqtt.proto_helper import ProtoHelper
+from models.ginco_bridge import GincoBridge
+
 
 def configure_socket():
     """Configure client over socket"""
@@ -18,18 +19,21 @@ def configure_socket():
     soc.send_string("mqtt://hostname")
     print(soc.receive_response())
 
+
 def use_mqtt():
     """Send mqtt commands"""
     mqtt = MqttClient("192.168.0.10", topics=[
         "ginco_bridge/status/083AF23AE64"
     ])
-    helper = ProtoHelper()
+    bridge = GincoBridge("083AF23AE643", mqtt)
+    # helper = ProtoHelper()
     time.sleep(1)
-    version = helper.requestVersion()
-    print(version)
-    mqtt.publish("ginco_bridge/command/083AF23AE64", version.SerializeToString())
-    # mqtt.upgrade(0, '/home/siemie/Code/gincoBridge/build/gincoBridge.bin')
-    # mqtt.upgrade(1, '/home/siemie/Code/switchCo/build/switch_co.bin')
+    # version = helper.requestVersion()
+    # print(version)
+    # mqtt.publish("ginco_bridge/command/083AF23AE64", version.SerializeToString())
+    # bridge.upgrade('/Users/siemie/code/other/ginco_bridge/_build_debug/ginco_bridge.bin')
+    bridge.upgrade_dev(2, '/Users/siemie/code/other/ginco_switch/_build_debug/ginco_switch.bin')
+
 
 if __name__ == "__main__":
     enable_console_log()

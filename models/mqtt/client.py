@@ -6,13 +6,15 @@ import logging
 import os
 
 import paho.mqtt.client as mqtt
-from google.protobuf.internal.decoder import _DecodeVarint32 #pylint: disable=W0611
+from google.protobuf.internal.decoder import _DecodeVarint32  # pylint: disable=W0611
 from google.protobuf.internal.encoder import _VarintBytes
 
 from utils.safe_executor import SafeExecutor
 from models.mqtt import ginco_pb2 as protobuf
 
-#pylint: disable=E1101
+# pylint: disable=E1101
+
+
 class MqttClient(mqtt.Client):
     """A client to interface with the current protobuf
 
@@ -130,7 +132,7 @@ class MqttClient(mqtt.Client):
         """
         self._executor.submit('cb unsubscribed', self.cb_unsubscribe, mid)
 
-    def upgrade(self, device_id: int, file: str):
+    def upgrade(self, device_id: int, file: str, topic: str):
         """Upgrade command for device
 
         Args:
@@ -141,7 +143,7 @@ class MqttClient(mqtt.Client):
         self._request.upgrade.image_size = int(os.path.getsize(file))  # in bytes
         with open(file, 'rb') as bin_file:
             data = bin_file.read()
-        self._send_upgrade(self._request, data)
+        self._send_upgrade(self._request, data, topic)
         self._request.ClearField('upgrade')
 
     def __on_message(self, _client, _userdata, message):
